@@ -1,6 +1,7 @@
 {
   "name": "daily-checkin",
   "version": "1.0.0",
+  "description": "Expo React Native app for daily self-tracking (sleep, mood, dreams, notes)",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
@@ -32,6 +33,9 @@
     "@types/react": "~19.1.0",
     "babel-preset-expo": "^54.0.10",
     "typescript": "~5.9.2"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "private": true,
   "license": "MIT",

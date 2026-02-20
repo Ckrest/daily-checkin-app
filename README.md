@@ -16,24 +16,29 @@ Expo React Native app for daily self-tracking. Rate your sleep quality, alertnes
 
 ## Quick Start
 
+The Expo project lives in the `src/` directory:
+
 ```bash
 cd src
 npm install
 npx expo start
 ```
 
-Scan the QR code with Expo Go on your phone, or press `a` to open in an Android emulator.
+Scan the QR code with [Expo Go](https://expo.dev/go) on your phone, or press `a` to open in an Android emulator.
+
+Requires Node 20+ (see `src/.node-version`).
 
 ## Building
 
-This project uses [EAS Build](https://docs.expo.dev/build/introduction/) for production builds:
+From the `src/` directory, use [EAS Build](https://docs.expo.dev/build/introduction/):
 
 ```bash
+cd src
 npx eas build --platform android --profile preview   # APK for testing
 npx eas build --platform android --profile production # AAB for Play Store
 ```
 
-> **Note:** If you fork this project, update the `extra.eas.projectId` and `updates.url` in `app.json` to point to your own EAS project.
+> **Note:** If you fork this project, update `extra.eas.projectId` and `updates.url` in `src/app.json` to point to your own EAS project.
 
 ## Data Storage
 
