@@ -108,6 +108,8 @@ def main() -> int:
             "dreams": dreams_enum,
             "dream_text": dream_text,
             "notes": notes,
+            "sleep_time": entry.get("sleep_time"),   # HH:MM or None
+            "wake_time": entry.get("wake_time"),     # HH:MM or None
         },
     }
 
