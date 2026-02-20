@@ -2,6 +2,10 @@
 
 Expo React Native app for daily self-tracking. Rate your sleep quality, alertness, and mood on a 1-5 scale, log dreams and notes, and optionally record sleep/wake times. Data is stored as a local JSON file for easy syncing and backup.
 
+<p align="center">
+  <img src="preview.jpg" alt="Daily Check-In screenshot" width="300">
+</p>
+
 ## Features
 
 - **Daily ratings** - Sleep quality, alertness, and mood on a 1-5 star scale
