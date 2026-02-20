@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "entries": {
+    "2026-01-01": {
+      "date": "2026-01-01",
+      "day": 1,
+      "sleep_quality": 4,
+      "alertness": 3,
+      "mood": 4,
+      "dreams": "",
+      "notes": "Happy new year! Slept well despite staying up late.",
+      "sleep_time": "00:30",
+      "wake_time": "08:45",
+      "created_at": "2026-01-01T09:00:00Z",
+      "updated_at": "2026-01-01T09:00:00Z"
+    },
+    "2026-01-02": {
+      "date": "2026-01-02",
+      "day": 2,
+      "sleep_quality": 2,
+      "alertness": 2,
+      "mood": 3,
+      "dreams": "Flying over a city, then falling into water",
+      "notes": "Woke up multiple times during the night",
+      "sleep_time": "23:15",
+      "wake_time": "06:30",
+      "created_at": "2026-01-02T07:00:00Z",
+      "updated_at": "2026-01-02T07:00:00Z"
+    },
+    "2026-01-03": {
+      "date": "2026-01-03",
+      "day": 3,
+      "sleep_quality": 5,
+      "alertness": 5,
+      "mood": 5,
+      "dreams": "",
+      "notes": "",
+      "sleep_time": "22:00",
+      "wake_time": "06:00",
+      "created_at": "2026-01-03T06:30:00Z",
+      "updated_at": "2026-01-03T06:30:00Z"
+    },
+    "2026-01-04": {
+      "date": "2026-01-04",
+      "day": 4,
+      "sleep_quality": 1,
+      "alertness": 1,
+      "mood": 2,
+      "dreams": "Recurring dream about being late to something important",
+      "notes": "Couldn't fall asleep until 3am. Need to cut caffeine earlier.",
+      "sleep_time": null,
+      "wake_time": null,
+      "created_at": "2026-01-04T10:00:00Z",
+      "updated_at": "2026-01-04T10:15:00Z"
+    },
+    "2026-01-05": {
+      "date": "2026-01-05",
+      "day": 5,
+      "sleep_quality": 3,
+      "alertness": 3,
+      "mood": 3,
+      "dreams": "",
+      "notes": "Average night. Went to bed at a reasonable time.",
+      "sleep_time": "23:00",
+      "wake_time": "07:00",
+      "created_at": "2026-01-05T07:30:00Z",
+      "updated_at": "2026-01-05T07:30:00Z"
+    }
+  }
+}

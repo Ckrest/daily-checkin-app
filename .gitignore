@@ -1,0 +1,67 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+
+# Build
+dist/
+build/
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+
+# Secrets
+.env
+
+# Node
+node_modules/
+
+# Cache
+.cache/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Data / logs
+*.log
+*.db
+*.sqlite3
+*.pkl
+*.pt
+*.pth
+*.safetensors
+*.pid
+
+# Expo / React Native
+.expo/
+expo-env.d.ts
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+*.tsbuildinfo
+.metro-health-check*
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Systems-owned (tracked by registry, not this repo)
+manifest.yaml
+NOTES.md
+trait_*.yaml
+
+# User data (synced separately)
+src/Dailycheckin/daily-checkin.json
