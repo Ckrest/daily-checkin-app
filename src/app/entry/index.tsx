@@ -29,7 +29,7 @@ export default function EntryScreen() {
   const insets = useSafeAreaInsets();
   const [currentDate, setCurrentDate] = useState(todayStr());
 
-  const { entry, updateField, saveNow, loading } = useEntry(currentDate);
+  const { entry, updateField, updateFields, saveNow, loading } = useEntry(currentDate);
   const [hasFolder, setHasFolder] = useState(true);
 
   // Blur text inputs when keyboard is manually dismissed (e.g. Android back button)
@@ -52,10 +52,9 @@ export default function EntryScreen() {
 
   const handleSleepChange = useCallback(
     (sleepTime: string, wakeTime: string) => {
-      updateField('sleep_time', sleepTime);
-      updateField('wake_time', wakeTime);
+      updateFields({ sleep_time: sleepTime, wake_time: wakeTime });
     },
-    [updateField]
+    [updateFields]
   );
 
   const goToPrev = useCallback(async () => {
@@ -177,11 +176,12 @@ export default function EntryScreen() {
                 onValueChange={(checked) => {
                   Keyboard.dismiss();
                   if (checked) {
-                    updateField('sleep_time', DEFAULT_SLEEP_TIME);
-                    updateField('wake_time', DEFAULT_WAKE_TIME);
+                    updateFields({
+                      sleep_time: DEFAULT_SLEEP_TIME,
+                      wake_time: DEFAULT_WAKE_TIME,
+                    });
                   } else {
-                    updateField('sleep_time', null);
-                    updateField('wake_time', null);
+                    updateFields({ sleep_time: null, wake_time: null });
                   }
                 }}
                 trackColor={{ false: colors.surfaceLight, true: colors.accent + '60' }}

@@ -1,6 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Entry } from '../data/types';
-import { defaultEntry, upsertEntry, getCachedData, refreshCache } from '../data/store';
+import {
+  defaultEntry,
+  flushPendingWrites,
+  upsertEntry,
+  getCachedData,
+  refreshCache,
+} from '../data/store';
 import { computeDayNumber } from '../data/dateUtils';
 
 export function useEntry(date: string) {
@@ -15,14 +21,25 @@ export function useEntry(date: string) {
   );
   const [savedEntry, setSavedEntry] = useState<Entry | null>(initialEntry);
   const [loading, setLoading] = useState(!cached);
+  const entryRef = useRef<Partial<Entry>>(initialEntry ?? defaultEntry(date, initialDayNumber));
   const mountedRef = useRef(true);
   const initializedRef = useRef(false);
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const saveSeqRef = useRef(0);
+  const dateRef = useRef(date);
 
   useEffect(() => {
     mountedRef.current = true;
     return () => { mountedRef.current = false; };
   }, []);
+
+  useEffect(() => {
+    dateRef.current = date;
+  }, [date]);
+
+  useEffect(() => {
+    entryRef.current = entry;
+  }, [entry]);
 
   // When date changes, try cache first (synchronous), then refresh from SAF
   useEffect(() => {
@@ -34,10 +51,13 @@ export function useEntry(date: string) {
       const existing = cached.entries[date] ?? null;
       const dayNumber = computeDayNumber(date, cached.meta.first_date);
       if (existing) {
+        entryRef.current = existing;
         setEntry(existing);
         setSavedEntry(existing);
       } else {
-        setEntry(defaultEntry(date, dayNumber));
+        const fresh = defaultEntry(date, dayNumber);
+        entryRef.current = fresh;
+        setEntry(fresh);
         setSavedEntry(null);
       }
       setLoading(false);
@@ -49,10 +69,13 @@ export function useEntry(date: string) {
         const existing = data.entries[date] ?? null;
         const dayNumber = computeDayNumber(date, data.meta.first_date);
         if (existing) {
+          entryRef.current = existing;
           setEntry(existing);
           setSavedEntry(existing);
         } else {
-          setEntry(defaultEntry(date, dayNumber));
+          const fresh = defaultEntry(date, dayNumber);
+          entryRef.current = fresh;
+          setEntry(fresh);
           setSavedEntry(null);
         }
         setLoading(false);
@@ -68,18 +91,38 @@ export function useEntry(date: string) {
     }
   }, [loading, date]);
 
-  const updateField = useCallback(<K extends keyof Entry>(field: K, value: Entry[K]) => {
-    setEntry((prev) => ({ ...prev, [field]: value }));
-  }, []);
-
-  const save = useCallback(async () => {
-    const saved = await upsertEntry({ ...entry, date } as Partial<Entry> & { date: string });
-    if (mountedRef.current) {
+  const saveDraft = useCallback(async (draft: Partial<Entry>) => {
+    const seq = ++saveSeqRef.current;
+    const saved = await upsertEntry({ ...draft, date } as Partial<Entry> & { date: string });
+    if (mountedRef.current && dateRef.current === date && seq === saveSeqRef.current) {
+      entryRef.current = saved;
       setSavedEntry(saved);
       setEntry(saved);
     }
     return saved;
-  }, [entry, date]);
+  }, [date]);
+
+  const updateField = useCallback(<K extends keyof Entry>(field: K, value: Entry[K]) => {
+    const next = { ...entryRef.current, [field]: value };
+    entryRef.current = next;
+    setEntry(next);
+    if (initializedRef.current) {
+      saveDraft(next);
+    }
+  }, [saveDraft]);
+
+  const updateFields = useCallback((patch: Partial<Entry>) => {
+    const next = { ...entryRef.current, ...patch };
+    entryRef.current = next;
+    setEntry(next);
+    if (initializedRef.current) {
+      saveDraft(next);
+    }
+  }, [saveDraft]);
+
+  const save = useCallback(async () => {
+    return saveDraft(entry);
+  }, [entry, saveDraft]);
 
   const isDirty = (() => {
     if (!savedEntry) {
@@ -90,7 +133,8 @@ export function useEntry(date: string) {
     return JSON.stringify(entry) !== JSON.stringify(savedEntry);
   })();
 
-  // Auto-save: debounce 2s after field changes
+  // Export catch-up: local storage is written immediately on edits; this
+  // catches changes from slower text composition paths without delaying save.
   useEffect(() => {
     if (!initializedRef.current) return;
     if (!isDirty) return;
@@ -109,6 +153,7 @@ export function useEntry(date: string) {
   const saveNow = useCallback(async () => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (isDirty) await save();
+    await flushPendingWrites();
   }, [isDirty, save]);
 
   // Cleanup debounce on unmount
@@ -118,5 +163,5 @@ export function useEntry(date: string) {
     };
   }, []);
 
-  return { entry, updateField, saveNow, isDirty, loading };
+  return { entry, updateField, updateFields, saveNow, isDirty, loading };
 }

@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
+import { AppState } from 'react-native';
 import { Stack } from 'expo-router';
 import { useRouter } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import Constants from 'expo-constants';
 import { colors } from '../src/theme';
-import { refreshCache } from '../src/data/store';
+import { flushPendingWrites, refreshCache } from '../src/data/store';
 
 const isExpoGo = Constants.appOwnership === 'expo';
 
@@ -15,6 +16,15 @@ export default function RootLayout() {
   // Pre-warm cache on app start so entry screen loads synchronously
   useEffect(() => {
     refreshCache();
+  }, []);
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'background' || nextState === 'inactive') {
+        flushPendingWrites();
+      }
+    });
+    return () => sub.remove();
   }, []);
 
   useEffect(() => {
